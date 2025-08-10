@@ -4,37 +4,10 @@ const agentesRepository = require(`../repositories/agentesRepository`);
 const mensagemErro = `Campo Obrigatório!`;
 
 async function getCasos(req, res) {
-    const { titulo, status, sort, agente_id, q } = req.query;
-
-    let casos = await casosRepository.findAll();
-
-    if (titulo) {
-        casos = casos.filter(c => c.titulo.toLowerCase().includes(titulo.toLowerCase()));
-    }
-
-    if (status) {
-        casos = casos.filter(c => c.status === status);
-    }
-
-    if (agente_id) {
-        casos = casos.filter(c => c.agente_id === agente_id);
-    }
-
-    if (q) {
-        const keyword = q.toLowerCase();
-        casos = casos.filter(c =>
-            c.titulo.toLowerCase().includes(keyword) ||
-            c.descricao.toLowerCase().includes(keyword)
-        );
-    }
-
-    if (sort === 'asc') {
-        casos.sort((a, b) => new Date(a.data) - new Date(b.data));
-    } else if (sort === 'desc') {
-        casos.sort((a, b) => new Date(b.data) - new Date(a.data));
-    }
-
-    return res.status(200).json(casos);
+  const { titulo, status, sort, agente_id, q } = req.query;
+  const filtros = { titulo, status, agente_id, q };
+  const casos = await casosRepository.findAll(filtros, sort);
+  return res.status(200).json(casos);
 }
 
 async function getCasosById(req, res) {

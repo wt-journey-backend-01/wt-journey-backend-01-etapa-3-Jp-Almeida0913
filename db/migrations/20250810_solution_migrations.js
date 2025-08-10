@@ -13,6 +13,7 @@ exports.up = function(knex) {
       table.enu('status', ['aberto', 'solucionado']).notNullable().defaultTo('aberto');
       table.integer('agente_id').unsigned().notNullable()
         .references('id').inTable('agentes').onDelete('CASCADE');
+      table.timestamp('dataCriacao').defaultTo(knex.fn.now());
     });
 };
 
