@@ -1,0 +1,27 @@
+{
+  "name": "wt-journey-backend",
+  "version": "1.0.0",
+  "description": "API para gerenciamento policial - Etapa 3 com PostgreSQL e Knex",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate": "npx knex migrate:latest",
+    "seed": "npx knex seed:run",
+    "db:reset": "docker compose down -v && docker compose up -d && sleep 5 && npx knex migrate:latest && npx knex seed:run"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "knex": "^3.1.0",
+    "pg": "^8.16.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "author": "João Almeida",
+  "license": "MIT"
+}
