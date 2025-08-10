@@ -4,20 +4,8 @@ const mensagemErro = `Campo Obrigatório!`;
 
 async function getAgentes(req, res) {
     const { cargo, sort } = req.query;
-
-    let   agentes = await agentesRepository.findAll();
-
-    if (cargo) {
-        agentes = agentes.filter(a => a.cargo === cargo);
-    }
-
-    if (sort === 'asc' || sort === 'dataDeIncorporacao') {
-        agentes.sort((a, b) => new Date(a.dataDeIncorporacao) - new Date(b.dataDeIncorporacao));
-    } else if (sort === 'desc' || sort === '-dataDeIncorporacao') {
-        agentes.sort((a, b) => new Date(b.dataDeIncorporacao) - new Date(a.dataDeIncorporacao));
-    }
-
-    return res.status(200).json(agentes);
+    const agentes = await agentesRepository.findAll({ cargo }, sort);
+    res.status(200).json(agentes);
 }
 
 async function getAgenteById(req, res) {

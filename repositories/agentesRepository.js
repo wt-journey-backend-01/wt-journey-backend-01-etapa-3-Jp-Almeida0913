@@ -1,7 +1,19 @@
 const db = require('../db/db');
 
-async function findAll() {
-  return db('agentes').select('*');
+async function findAll(filters = {}, sort) {
+  let query = db('agentes').select('*');
+
+  if (filters.cargo) {
+    query = query.where('cargo', filters.cargo);
+  }
+
+  if (sort === 'asc') {
+    query = query.orderBy('dataDeIncorporacao', 'asc');
+  } else if (sort === 'desc') {
+    query = query.orderBy('dataDeIncorporacao', 'desc');
+  }
+
+  return query;
 }
 
 async function findById(id) {
@@ -9,7 +21,6 @@ async function findById(id) {
 }
 
 async function create(agente) {
-  // agente: { nome, dataDeIncorporacao, cargo }
   const [newId] = await db('agentes').insert(agente).returning('id');
   return findById(newId);
 }

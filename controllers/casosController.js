@@ -83,7 +83,7 @@ async function createCaso(req, res) {
         });
     }
 
-    const novoCaso = casosRepository.create({ titulo, descricao, status, agente_id });
+    const novoCaso = await casosRepository.create({ titulo, descricao, status, agente_id });
     res.status(201).json(novoCaso);
 }
 
@@ -158,7 +158,7 @@ async function atualizarParcialCaso(req, res) {
     }
 
     if (campos.agente_id) {
-        const agenteExiste = agentesRepository.findAll().some((agente) => agente.id === campos.agente_id);
+        const agenteExiste =  await agentesRepository.findAll().some((agente) => agente.id === campos.agente_id);
         if (!agenteExiste) {
             return res.status(404).json({
                 status: 404,
