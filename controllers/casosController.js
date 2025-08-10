@@ -3,10 +3,10 @@ const agentesRepository = require(`../repositories/agentesRepository`);
 
 const mensagemErro = `Campo Obrigatório!`;
 
-function getCasos(req, res) {
+async function getCasos(req, res) {
     const { titulo, status, sort, agente_id, q } = req.query;
 
-    let casos = casosRepository.findAll();
+    let casos = await casosRepository.findAll();
 
     if (titulo) {
         casos = casos.filter(c => c.titulo.toLowerCase().includes(titulo.toLowerCase()));
@@ -37,9 +37,9 @@ function getCasos(req, res) {
     return res.status(200).json(casos);
 }
 
-function getCasosById(req, res) {
+async function getCasosById(req, res) {
     const { id } = req.params;
-    const caso = casosRepository.findById(id);
+    const caso = await casosRepository.findById(id);
 
     if (!caso) {
         return res.status(404).json({ message: `Caso não encontrado.` });
@@ -48,7 +48,7 @@ function getCasosById(req, res) {
     res.status(200).json(caso);
 }
 
-function createCaso(req, res) {
+async function createCaso(req, res) {
     const { titulo, descricao, status, agente_id } = req.body;
 
     if (!titulo || !descricao || !status || !agente_id) {
@@ -74,7 +74,7 @@ function createCaso(req, res) {
         });
     }
 
-    const agenteExiste = agentesRepository.findAll().some((agente) => agente.id === agente_id);
+    const agenteExiste = await agentesRepository.findAll().some((agente) => agente.id === agente_id);
 
     if (!agenteExiste) {
         return res.status(404).json({
@@ -87,7 +87,7 @@ function createCaso(req, res) {
     res.status(201).json(novoCaso);
 }
 
-function atualizarCaso(req, res) {
+async function atualizarCaso(req, res) {
     const { id } = req.params;
     const novoCaso = req.body;
 
@@ -120,7 +120,7 @@ function atualizarCaso(req, res) {
         });
     }
 
-    const agenteExiste = agentesRepository.findAll().some((agente) => agente.id === novoCaso.agente_id);
+    const agenteExiste = await agentesRepository.findAll().some((agente) => agente.id === novoCaso.agente_id);
     if (!agenteExiste) {
         return res.status(404).json({
             status: 404,
@@ -128,7 +128,7 @@ function atualizarCaso(req, res) {
         });
     }
 
-    const atualizado = casosRepository.update(id, novoCaso);
+    const atualizado = await casosRepository.update(id, novoCaso);
 
     if (!atualizado) {
         return res.status(404).json({ message: `Caso não encontrado.` });
@@ -137,7 +137,7 @@ function atualizarCaso(req, res) {
     res.status(200).json(atualizado);
 }
 
-function atualizarParcialCaso(req, res) {
+async function atualizarParcialCaso(req, res) {
     const { id } = req.params;
     const campos = req.body;
 
@@ -167,7 +167,7 @@ function atualizarParcialCaso(req, res) {
         }
     }
 
-    const atualizado = casosRepository.update(id, campos);
+    const atualizado = await casosRepository.update(id, campos);
 
     if (!atualizado) {
         return res.status(404).json({ message: `Caso não encontrado.` });
@@ -176,10 +176,10 @@ function atualizarParcialCaso(req, res) {
     res.status(200).json(atualizado);
 }
 
-function deletarCaso(req, res) {
+async function deletarCaso(req, res) {
     const { id } = req.params;
 
-    const removido = casosRepository.remove(id);
+    const removido = await casosRepository.remove(id);
 
     if (!removido) {
         return res.status(404).json({ message: `Caso não encontrado.` });

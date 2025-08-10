@@ -2,10 +2,10 @@ const agentesRepository = require(`../repositories/agentesRepository`);
 const { isValidDate } = require(`../utils/validator`);
 const mensagemErro = `Campo Obrigatório!`;
 
-function getAgentes(req, res) {
+async function getAgentes(req, res) {
     const { cargo, sort } = req.query;
 
-    let agentes = agentesRepository.findAll();
+    let   agentes = await agentesRepository.findAll();
 
     if (cargo) {
         agentes = agentes.filter(a => a.cargo === cargo);
@@ -20,9 +20,9 @@ function getAgentes(req, res) {
     return res.status(200).json(agentes);
 }
 
-function getAgenteById(req, res) {
+async function getAgenteById(req, res) {
     const { id } = req.params;
-    const agente = agentesRepository.findById(id);
+    const agente = await agentesRepository.findById(id);
 
     if (!agente) {
         return res.status(404).json({ message: `Agente não encontrado.` });
@@ -31,7 +31,7 @@ function getAgenteById(req, res) {
     res.status(200).json(agente);
 }
 
-function createAgente(req, res) {
+async function createAgente(req, res) {
     const { nome, dataDeIncorporacao, cargo } = req.body;
 
     if (!nome || !dataDeIncorporacao || !cargo) {
@@ -56,11 +56,11 @@ function createAgente(req, res) {
         });
     }
 
-    const novoAgente = agentesRepository.create({ nome, dataDeIncorporacao, cargo });
+    const novoAgente = await agentesRepository.create({ nome, dataDeIncorporacao, cargo });
     res.status(201).json(novoAgente);
 }
 
-function atualizarAgente(req, res) {
+async function atualizarAgente(req, res) {
     const { id } = req.params;
     const novoAgente = req.body;
 
@@ -92,7 +92,7 @@ function atualizarAgente(req, res) {
         });
     }
 
-    const atualizado = agentesRepository.update(id, novoAgente);
+    const atualizado = await agentesRepository.update(id, novoAgente);
 
     if (!atualizado) {
         return res.status(404).json({ message: `Agente não encontrado.` });
@@ -101,7 +101,7 @@ function atualizarAgente(req, res) {
     res.status(200).json(atualizado);
 }
 
-function atualizarParcialAgente(req, res) {
+async function atualizarParcialAgente(req, res) {
     const { id } = req.params;
     const campos = req.body;
 
@@ -132,7 +132,7 @@ function atualizarParcialAgente(req, res) {
         });
     }
 
-    const atualizado = agentesRepository.update(id, campos);
+    const atualizado = await agentesRepository.update(id, campos);
 
     if (!atualizado) {
         return res.status(404).json({ message: `Agente não encontrado.` });
@@ -141,10 +141,10 @@ function atualizarParcialAgente(req, res) {
     res.status(200).json(atualizado);
 }
 
-function deletarAgente(req, res) {
+async function deletarAgente(req, res) {
     const { id } = req.params;
 
-    const removido = agentesRepository.remove(id);
+    const removido = await agentesRepository.remove(id);
 
     if (!removido) {
         return res.status(404).json({ message: `Agente não encontrado.` });
